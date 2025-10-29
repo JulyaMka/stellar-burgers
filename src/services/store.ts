@@ -1,19 +1,28 @@
 import { configureStore } from '@reduxjs/toolkit';
-
+import { rootReducer, RootState } from './rootReducer';
+import { socketMiddleware } from './middleware/socketMiddleware';
+import { feedActions } from './slices/feedSlice';
 import {
   TypedUseSelectorHook,
   useDispatch as dispatchHook,
   useSelector as selectorHook
 } from 'react-redux';
 
-const rootReducer = () => {}; // Заменить на импорт настоящего редьюсера
-
-const store = configureStore({
-  reducer: rootReducer,
-  devTools: process.env.NODE_ENV !== 'production'
+const feedMiddleware = socketMiddleware({
+  wsConnect: feedActions.wsConnect.type,
+  wsDisconnect: feedActions.wsDisconnect.type,
+  onOpen: feedActions.wsOnOpen.type,
+  onClose: feedActions.wsOnClose.type,
+  onError: feedActions.wsOnError.type,
+  onMessage: feedActions.wsOnMessage.type
 });
 
-export type RootState = ReturnType<typeof rootReducer>;
+export const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(feedMiddleware),
+  devTools: process.env.NODE_ENV !== 'production'
+});
 
 export type AppDispatch = typeof store.dispatch;
 

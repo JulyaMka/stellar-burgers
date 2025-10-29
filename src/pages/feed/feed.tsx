@@ -1,15 +1,28 @@
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
-import { TOrder } from '@utils-types';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
+import { useDispatch, useSelector } from '../../services/store';
+import { feedActions } from '../../services/slices/feedSlice';
+import { getWebSocketUrl } from '../../utils/burger-api';
 
 export const Feed: FC = () => {
-  /** TODO: взять переменную из стора */
-  const orders: TOrder[] = [];
+  const dispatch = useDispatch();
+  const { orders, loading } = useSelector((state: any) => state.feed);
 
-  if (!orders.length) {
+  useEffect(() => {
+    const wsUrl = getWebSocketUrl('orders/all');
+    dispatch(feedActions.wsConnect(wsUrl));
+
+    return () => {
+      dispatch(feedActions.wsDisconnect());
+    };
+  }, [dispatch]);
+
+  if (loading && orders.length === 0) {
     return <Preloader />;
   }
 
-  <FeedUI orders={orders} handleGetFeeds={() => {}} />;
+  return (
+    <FeedUI orders={orders} handleGetFeeds={() => window.location.reload()} />
+  );
 };
