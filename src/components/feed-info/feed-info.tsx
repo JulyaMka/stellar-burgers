@@ -14,6 +14,7 @@ export const FeedInfo: FC = () => {
   const feed = useSelector((state: any) => state.feed);
 
   const readyOrders = getOrders(orders, 'done');
+  
   const pendingOrders = getOrders(orders, 'pending');
 
   return (

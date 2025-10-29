@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, FC } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useSelector } from '../../services/store';
 import { TTabMode, TIngredient } from '@utils-types';
-import { BurgerIngredientsUI } from '@ui';
+import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 
 export const BurgerIngredients: FC = () => {
   const { ingredients, loading } = useSelector((state) => state.ingredients);
