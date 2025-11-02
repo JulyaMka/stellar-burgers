@@ -9,14 +9,10 @@ import { useNavigate } from 'react-router-dom';
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const constructorItems = useSelector((state: any) => state.burgerConstructor);
-  const orderRequest = useSelector((state: any) => state.order.loading);
-  const orderModalData = useSelector(
-    (state: any) => state.order.orderModalData
-  );
-  const isAuthenticated = useSelector(
-    (state: any) => state.user.isAuthenticated
-  );
+  const constructorItems = useSelector((state) => state.burgerConstructor);
+  const orderRequest = useSelector((state) => state.order.loading);
+  const orderModalData = useSelector((state) => state.order.orderModalData);
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
   const onOrderClick = () => {
     if (!isAuthenticated) {

@@ -1,5 +1,11 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
+import { getFeedsApi } from '../../utils/burger-api';
+
+export const getFeeds = createAsyncThunk('feed/getFeeds', async () => {
+  const response = await getFeedsApi(); // ← ваш API метод
+  return response;
+});
 
 type TFeedState = {
   orders: TOrder[];

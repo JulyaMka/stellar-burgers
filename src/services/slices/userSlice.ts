@@ -12,42 +12,19 @@ import {
 import { setCookie, deleteCookie } from '../../utils/cookie';
 
 // Thunk для логина
-export const loginUser = createAsyncThunk(
-  'user/login',
-  async (userData: TLoginData) => {
-    const response = await loginUserApi(userData);
-    return response;
-  }
-);
+export const loginUser = createAsyncThunk('user/login', loginUserApi);
 
 // Thunk для регистрации
-export const registerUser = createAsyncThunk(
-  'user/register',
-  async (userData: TRegisterData) => {
-    const response = await registerUserApi(userData);
-    return response;
-  }
-);
+export const registerUser = createAsyncThunk('user/register', registerUserApi);
 
 // Thunk для получения данных пользователя
-export const getUser = createAsyncThunk('user/getUser', async () => {
-  const response = await getUserApi();
-  return response;
-});
+export const getUser = createAsyncThunk('user/getUser', getUserApi);
 
 // Thunk для выхода
-export const logoutUser = createAsyncThunk('user/logout', async () => {
-  await logoutApi();
-});
+export const logoutUser = createAsyncThunk('user/logout', logoutApi);
 
 // Thunk для обновления данных пользователя
-export const updateUser = createAsyncThunk(
-  'user/updateUser',
-  async (userData: Partial<TRegisterData>) => {
-    const response = await updateUserApi(userData);
-    return response;
-  }
-);
+export const updateUser = createAsyncThunk('user/updateUser', updateUserApi);
 
 type TUserState = {
   isAuthenticated: boolean;

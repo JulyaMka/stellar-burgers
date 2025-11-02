@@ -14,11 +14,11 @@ export const OrderInfo: FC = () => {
   const dispatch = useDispatch();
 
   const ingredients: TIngredient[] = useSelector(
-    (state: any) => state.ingredients.ingredients
+    (state) => state.ingredients.ingredients
   );
-  const orderData = useSelector((state: any) => state.order.currentOrder);
-  const loading = useSelector((state: any) => state.order.loading);
-  const error = useSelector((state: any) => state.order.error);
+  const orderData = useSelector((state) => state.order.currentOrder);
+  const loading = useSelector((state) => state.order.loading);
+  const error = useSelector((state) => state.order.error);
 
   useEffect(() => {
     if (number) {
