@@ -1,5 +1,5 @@
 import { setCookie, getCookie } from './cookie';
-import { TIngredient, TOrder, TOrdersData, TUser } from './types';
+import { TIngredient, TOrder, TUser } from './types';
 
 const URL = process.env.BURGER_API_URL;
 
@@ -65,10 +65,6 @@ type TFeedsResponse = TServerResponse<{
   orders: TOrder[];
   total: number;
   totalToday: number;
-}>;
-
-type TOrdersResponse = TServerResponse<{
-  data: TOrder[];
 }>;
 
 export const getIngredientsApi = () =>
@@ -233,3 +229,15 @@ export const logoutApi = () =>
       token: localStorage.getItem('refreshToken')
     })
   }).then((res) => checkResponse<TServerResponse<{}>>(res));
+
+export const getWebSocketUrl = (endpoint: string, token?: string): string => {
+  const baseUrl =
+    URL?.replace('https://', 'wss://').replace('/api', '') ||
+    'wss://norma.nomoreparties.space';
+
+  if (token) {
+    return `${baseUrl}/${endpoint}?token=${token}`;
+  }
+
+  return `${baseUrl}/${endpoint}`;
+};
