@@ -100,6 +100,51 @@ describe('Конструктор бургеров', () => {
     cy.get('[data-testid=order-button]').should('be.disabled');
   });
 
+  it('должен успешно создавать заказ при авторизации', () => {
+    cy.intercept('GET', '**/api/auth/user', {
+      fixture: 'user.json'
+    }).as('getUser');
+
+    cy.intercept('POST', '**/api/orders', {
+      fixture: 'order.json'
+    }).as('createOrder');
+
+    cy.setCookie('accessToken', 'test-access-token');
+    cy.window().then((win) => {
+      win.localStorage.setItem('refreshToken', 'test-refresh-token');
+    });
+
+    cy.reload();
+    cy.wait('@getIngredients');
+
+    cy.get('[data-testid=ingredient-bun]')
+      .first()
+      .within(() => {
+        cy.get('button').contains('Добавить').click();
+      });
+
+    cy.get('[data-testid=ingredient-main]')
+      .first()
+      .within(() => {
+        cy.get('button').contains('Добавить').click();
+      });
+
+    cy.get('[data-testid=order-button]').click();
+
+    cy.wait('@createOrder');
+
+    cy.get('[data-testid=modal]').should('be.visible');
+
+    cy.contains('12345').should('be.visible');
+
+    cy.get('[data-testid=modal-close]').click();
+    cy.get('[data-testid=modal]').should('not.exist');
+
+    cy.get('[data-testid=constructor-bun-top]').should('not.exist');
+    cy.get('[data-testid=constructor-bun-bottom]').should('not.exist');
+    cy.get('[data-testid=constructor-ingredient]').should('not.exist');
+  });
+
   afterEach(() => {
     cy.clearLocalStorage();
     cy.clearCookies();
