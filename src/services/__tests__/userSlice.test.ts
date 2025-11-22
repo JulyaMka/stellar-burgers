@@ -1,20 +1,20 @@
-import userReducer, { loginUser } from '../slices/userSlice';
+import userReducer, { loginUser, initialState } from '../slices/userSlice';
 
 describe('userSlice reducer', () => {
-  const initialState = {
-    isAuthenticated: false,
-    user: null,
-    loading: false,
-    error: null
-  };
+  it('возвращает начальное состояние', () => {
+    expect(userReducer(undefined, { type: '' })).toEqual(initialState);
+  });
 
   describe('асинхронные экшены', () => {
     it('устанавливает loading в true при loginUser.pending', () => {
       const action = { type: loginUser.pending.type };
       const state = userReducer(initialState, action);
 
-      expect(state.loading).toBe(true);
-      expect(state.error).toBeNull();
+      expect(state).toEqual({
+        ...initialState,
+        loading: true,
+        error: null
+      });
     });
 
     it('устанавливает пользователя и isAuthenticated при loginUser.fulfilled', () => {
@@ -32,10 +32,13 @@ describe('userSlice reducer', () => {
       };
       const state = userReducer(initialState, action);
 
-      expect(state.loading).toBe(false);
-      expect(state.user).toEqual(mockUser);
-      expect(state.isAuthenticated).toBe(true);
-      expect(state.error).toBeNull();
+      expect(state).toEqual({
+        ...initialState,
+        loading: false,
+        user: mockUser,
+        isAuthenticated: true,
+        error: null
+      });
     });
 
     it('устанавливает ошибку при loginUser.rejected', () => {
@@ -46,8 +49,11 @@ describe('userSlice reducer', () => {
       };
       const state = userReducer(initialState, action);
 
-      expect(state.loading).toBe(false);
-      expect(state.error).toBe(errorMessage);
+      expect(state).toEqual({
+        ...initialState,
+        loading: false,
+        error: errorMessage
+      });
     });
   });
 });

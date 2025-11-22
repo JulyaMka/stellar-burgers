@@ -1,5 +1,6 @@
 import ingredientsReducer, {
-  getIngredients
+  getIngredients,
+  initialState
 } from '../slices/ingriedientsSlice';
 import { TIngredient } from '@utils-types';
 
@@ -33,18 +34,16 @@ const mockIngredients: TIngredient[] = [
 ];
 
 describe('ingredients slice', () => {
-  const initialState = {
-    ingredients: [],
-    loading: false,
-    error: null
-  };
+  it('возвращает начальное состояние', () => {
+    expect(ingredientsReducer(undefined, { type: '' })).toEqual(initialState);
+  });
 
   it('обрабатывает состояние загрузки ингредиентов', () => {
     const action = { type: getIngredients.pending.type };
     const state = ingredientsReducer(initialState, action);
 
     expect(state).toEqual({
-      ingredients: [],
+      ...initialState,
       loading: true,
       error: null
     });
@@ -58,6 +57,7 @@ describe('ingredients slice', () => {
     const state = ingredientsReducer(initialState, action);
 
     expect(state).toEqual({
+      ...initialState,
       ingredients: mockIngredients,
       loading: false,
       error: null
@@ -72,6 +72,7 @@ describe('ingredients slice', () => {
     const state = ingredientsReducer(initialState, action);
 
     expect(state).toEqual({
+      ...initialState,
       ingredients: [],
       loading: false,
       error: 'Error loading ingredients'

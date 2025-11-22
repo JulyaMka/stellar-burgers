@@ -3,9 +3,10 @@ import constructorReducer, {
   addIngredient,
   removeIngredient,
   moveIngredient,
-  clearConstructor
+  clearConstructor,
+  initialState
 } from '../slices/constructorSlice';
-import { TIngredient, TConstructorIngredient } from '@utils-types';
+import { TIngredient } from '@utils-types';
 
 const mockBun: TIngredient = {
   _id: '1',
@@ -36,11 +37,6 @@ const mockIngredient: TIngredient = {
 };
 
 describe('constructor slice', () => {
-  const initialState = {
-    bun: null,
-    ingredients: []
-  };
-
   it('возвращает начальное состояние', () => {
     expect(constructorReducer(undefined, { type: '' })).toEqual(initialState);
   });
@@ -50,6 +46,7 @@ describe('constructor slice', () => {
     const state = constructorReducer(initialState, action);
 
     expect(state.bun).toEqual(mockBun);
+    expect(state.ingredients).toEqual([]);
   });
 
   it('обрабатывает добавление ингредиента', () => {
@@ -59,6 +56,7 @@ describe('constructor slice', () => {
     expect(state.ingredients).toHaveLength(1);
     expect(state.ingredients[0]).toMatchObject(mockIngredient);
     expect(state.ingredients[0]).toHaveProperty('id');
+    expect(state.bun).toBeNull();
   });
 
   it('обрабатывает удаление ингредиента', () => {

@@ -1,14 +1,9 @@
-import feedReducer from '../slices/feedSlice';
+import feedReducer, { initialState } from '../slices/feedSlice';
 
 describe('feedSlice reducer', () => {
-  const initialState = {
-    orders: [],
-    total: 0,
-    totalToday: 0,
-    loading: false,
-    error: null,
-    wsConnected: false
-  };
+  it('возвращает начальное состояние', () => {
+    expect(feedReducer(undefined, { type: '' })).toEqual(initialState);
+  });
 
   describe('WebSocket экшены', () => {
     it('устанавливает loading в true при wsConnect', () => {

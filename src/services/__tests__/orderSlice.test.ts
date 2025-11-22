@@ -1,4 +1,8 @@
-import orderReducer, { createOrder, clearOrder } from '../slices/orderSlice';
+import orderReducer, {
+  createOrder,
+  clearOrder,
+  initialState
+} from '../slices/orderSlice';
 import { TOrder } from '@utils-types';
 
 const mockOrder: TOrder = {
@@ -12,15 +16,9 @@ const mockOrder: TOrder = {
 };
 
 describe('order slice', () => {
-  const initialState = {
-    orderRequest: false,
-    orderModalData: null,
-    currentOrder: null,
-    orders: [],
-    loading: false,
-    error: null,
-    wsConnected: false
-  };
+  it('возвращает начальное состояние', () => {
+    expect(orderReducer(undefined, { type: '' })).toEqual(initialState);
+  });
 
   it('обрабатывает состояние создания заказа', () => {
     const action = { type: createOrder.pending.type };

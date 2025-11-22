@@ -45,7 +45,7 @@ type TOrderState = {
   wsConnected: boolean;
 };
 
-const initialState: TOrderState = {
+export const initialState: TOrderState = {
   orderRequest: false,
   orderModalData: null,
   currentOrder: null,
