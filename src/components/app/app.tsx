@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store'; // Добавить useSelector
 import { getIngredients } from '../../services/slices/ingriedientsSlice';
+import { getUser } from '../../services/slices/userSlice'; // Добавить импорт getUser
 import {
   ConstructorPage,
   Feed,
@@ -24,9 +25,19 @@ const App = () => {
   const navigate = useNavigate();
   const background = location.state?.background;
 
+  // Получаем состояние пользователя из store
+  const { user, isAuthenticated } = useSelector((state) => state.user);
+
   useEffect(() => {
+    // Загружаем ингредиенты
     dispatch(getIngredients());
-  }, [dispatch]);
+
+    // Проверяем авторизацию если есть токен И пользователь еще не загружен
+    const hasAccessToken = document.cookie.includes('accessToken');
+    if (hasAccessToken && !user) {
+      dispatch(getUser());
+    }
+  }, [dispatch, user]); // Добавить user в зависимости
 
   const handleModalClose = () => {
     navigate(-1);
