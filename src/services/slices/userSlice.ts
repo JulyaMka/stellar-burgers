@@ -33,7 +33,7 @@ type TUserState = {
   error: string | null;
 };
 
-const initialState: TUserState = {
+export const initialState: TUserState = {
   isAuthenticated: false,
   user: null,
   loading: false,
