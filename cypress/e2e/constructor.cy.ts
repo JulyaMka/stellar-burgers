@@ -1,4 +1,13 @@
 describe('Конструктор бургеров', () => {
+  const constructorBunTop = '[data-testid=constructor-bun-top]';
+  const constructorBunBottom = '[data-testid=constructor-bun-bottom]';
+  const constructorIngredient = '[data-testid=constructor-ingredient]';
+  const modal = '[data-testid=modal]';
+  const modalClose = '[data-testid=modal-close]';
+  const ingredientBun = '[data-testid=ingredient-bun]';
+  const ingredientMain = '[data-testid=ingredient-main]';
+  const orderButton = '[data-testid=order-button]';
+
   beforeEach(() => {
     cy.intercept('GET', '**/api/ingredients', {
       fixture: 'ingredients.json'
@@ -9,9 +18,9 @@ describe('Конструктор бургеров', () => {
 
     cy.get('[data-testid=burger-ingredients]').as('burgerIngredients');
     cy.get('[data-testid=burger-constructor]').as('burgerConstructor');
-    cy.get('[data-testid=ingredient-bun]').first().as('firstBun');
-    cy.get('[data-testid=ingredient-main]').first().as('firstMain');
-    cy.get('[data-testid=order-button]').as('orderButton');
+    cy.get(ingredientBun).first().as('firstBun');
+    cy.get(ingredientMain).first().as('firstMain');
+    cy.get(orderButton).as('orderButton');
   });
 
   it('должен загружать страницу конструктора', () => {
@@ -32,8 +41,12 @@ describe('Конструктор бургеров', () => {
       cy.get('button').contains('Добавить').click();
     });
 
-    cy.get('[data-testid=constructor-bun-top]').should('exist').and('contain', 'Краторная булка N-200i');
-    cy.get('[data-testid=constructor-bun-bottom]').should('exist').and('contain', 'Краторная булка N-200i');
+    cy.get(constructorBunTop)
+      .should('exist')
+      .and('contain', 'Краторная булка N-200i');
+    cy.get(constructorBunBottom)
+      .should('exist')
+      .and('contain', 'Краторная булка N-200i');
   });
 
   it('должен добавлять начинку в конструктор и проверять правильность', () => {
@@ -41,22 +54,24 @@ describe('Конструктор бургеров', () => {
       cy.get('button').contains('Добавить').click();
     });
 
-    cy.get('[data-testid=constructor-ingredient]').should('exist').and('contain', 'Биокотлета из марсианской Магнолии');
+    cy.get(constructorIngredient)
+      .should('exist')
+      .and('contain', 'Биокотлета из марсианской Магнолии');
   });
 
   it('должен правильно открывать и закрывать модальное окно с деталями конкретного ингредиента', () => {
     cy.get('@firstBun').click();
 
-    cy.get('[data-testid=modal]').should('be.visible');
-    cy.get('[data-testid=modal]').should('contain', 'Краторная булка N-200i');
-    cy.get('[data-testid=modal]').contains('420').should('be.visible');
+    cy.get(modal).should('be.visible');
+    cy.get(modal).should('contain', 'Краторная булка N-200i');
+    cy.get(modal).contains('420').should('be.visible');
 
-    cy.get('[data-testid=modal-close]').click();
-    cy.get('[data-testid=modal]').should('not.exist');
+    cy.get(modalClose).click();
+    cy.get(modal).should('not.exist');
 
     cy.get('@firstBun').click();
     cy.get('[data-testid=modal-overlay]').click({ force: true });
-    cy.get('[data-testid=modal]').should('not.exist');
+    cy.get(modal).should('not.exist');
   });
 
   it('должен перенаправлять на логин при попытке создать заказ без авторизации', () => {
@@ -90,8 +105,8 @@ describe('Конструктор бургеров', () => {
       cy.get('button').contains('Добавить').click();
     });
 
-    cy.get('[data-testid=constructor-bun-top]').should('not.exist');
-    cy.get('[data-testid=constructor-bun-bottom]').should('not.exist');
+    cy.get(constructorBunTop).should('not.exist');
+    cy.get(constructorBunBottom).should('not.exist');
     cy.get('@orderButton').should('be.disabled');
   });
 
@@ -112,9 +127,9 @@ describe('Конструктор бургеров', () => {
     cy.reload();
     cy.wait('@getIngredients');
 
-    cy.get('[data-testid=ingredient-bun]').first().as('firstBun');
-    cy.get('[data-testid=ingredient-main]').first().as('firstMain');
-    cy.get('[data-testid=order-button]').as('orderButton');
+    cy.get(ingredientBun).first().as('firstBun');
+    cy.get(ingredientMain).first().as('firstMain');
+    cy.get(orderButton).as('orderButton');
 
     cy.get('@firstBun').within(() => {
       cy.get('button').contains('Добавить').click();
@@ -127,15 +142,15 @@ describe('Конструктор бургеров', () => {
     cy.get('@orderButton').click();
     cy.wait('@createOrder');
 
-    cy.get('[data-testid=modal]').should('be.visible');
+    cy.get(modal).should('be.visible');
     cy.contains('12345').should('be.visible');
 
-    cy.get('[data-testid=modal-close]').click();
-    cy.get('[data-testid=modal]').should('not.exist');
+    cy.get(modalClose).click();
+    cy.get(modal).should('not.exist');
 
-    cy.get('[data-testid=constructor-bun-top]').should('not.exist');
-    cy.get('[data-testid=constructor-bun-bottom]').should('not.exist');
-    cy.get('[data-testid=constructor-ingredient]').should('not.exist');
+    cy.get(constructorBunTop).should('not.exist');
+    cy.get(constructorBunBottom).should('not.exist');
+    cy.get(constructorIngredient).should('not.exist');
   });
 
   afterEach(() => {
