@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store';
 import { getIngredients } from '../../services/slices/ingriedientsSlice';
+import { getUser } from '../../services/slices/userSlice';
 import {
   ConstructorPage,
   Feed,
@@ -24,9 +25,16 @@ const App = () => {
   const navigate = useNavigate();
   const background = location.state?.background;
 
+  const { user, isAuthenticated } = useSelector((state) => state.user);
+
   useEffect(() => {
     dispatch(getIngredients());
-  }, [dispatch]);
+
+    const hasAccessToken = document.cookie.includes('accessToken');
+    if (hasAccessToken && !user) {
+      dispatch(getUser());
+    }
+  }, [dispatch, user]);
 
   const handleModalClose = () => {
     navigate(-1);
